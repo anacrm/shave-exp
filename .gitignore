@@ -104,3 +104,7 @@ dist
 .tern-port
 
 apps/
+
+
+cypress/.DS_Store
+.DS_Store

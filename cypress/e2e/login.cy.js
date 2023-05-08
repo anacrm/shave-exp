@@ -1,4 +1,8 @@
 /// <reference types="cypress"/>
+import loginPage from '../support/pages/login'
+import shaversPage from '../support/pages/shavers'
+import header from '../support/components/header'
+
 
 describe('Login', () => {
     context('When I fill out a form', () => {
@@ -8,57 +12,35 @@ describe('Login', () => {
             password: '123Mudar'
         }
         it('Should login successfully', () => {
-            cy.visit('/')
-            cy.get('input[placeholder="Seu email"]').type(user.email)
-            cy.get('input[placeholder*="senha"]').type(user.password)
-            cy.contains('button', 'Entrar').click()
-            cy.get('.logged-user div a')
-                .should('be.visible')
-                .should('have.text', 'Olá, ' + user.name)
+
+            loginPage.submit(user.email, user.password)
+            shaversPage.header.userShouldBeLoggedIn(user.name)
         })
         it('Should not login with wrong password', () => {
 
             user.password = 123456
 
-            cy.visit('/')
-            cy.get('input[placeholder="Seu email"]').type(user.email)
-            cy.get('input[placeholder*="senha"]').type(user.password)
-            cy.contains('button', 'Entrar').click()
+            loginPage.submit(user.email, user.password)
 
             const errorMessage = 'Ocorreu um erro ao fazer login, verifique suas credenciais.'
-            cy.get('.notice-container')
-                .should('be.visible')
-                .find('.error p')
-                .should('have.text', errorMessage)
+            loginPage.noticeShouldBe(errorMessage)
 
         })
         it('Should not login with wrong email', () => {
 
             user.email = 'ana404@gmail.com'
 
-            cy.visit('/')
-            cy.get('input[placeholder="Seu email"]').type(user.email)
-            cy.get('input[placeholder*="senha"]').type(user.password)
-            cy.contains('button', 'Entrar').click()
+            loginPage.submit(user.email, user.password)
 
             const errorMessage = 'Ocorreu um erro ao fazer login, verifique suas credenciais.'
-            cy.get('.notice-container')
-                .should('be.visible')
-                .find('.error p')
-                .should('have.text', errorMessage)
+            loginPage.noticeShouldBe(errorMessage)
 
         })
         it('Should not login with invalid email', () => {
 
             user.email = 'anamedeiros18gmail.com'
 
-            cy.visit('/')
-            cy.get('input[placeholder="Seu email"]').type(user.email)
-            cy.get('input[placeholder*="senha"]').type(user.password)
-            cy.contains('button', 'Entrar').click()
-
-
-
+            loginPage.submit(user.email, user.password)
         })
 
     })
